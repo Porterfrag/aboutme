@@ -3,299 +3,551 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Persona 5 Portfolio | Ridho Wahyu Darmawan</title>
+    <title>Character Menu | Ridho Wahyu Darmawan</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Arsenal:wght@400;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --p5-red: #d32f2f;
-            --p5-black: #000000;
-            --p5-white: #ffffff;
+            --gi-gold-light: #ece5d8;
+            --gi-gold-accent: #dbb47f;
+            --gi-blue-dark: #1b1e28;
+            --gi-blue-panel: rgba(27, 30, 40, 0.7);
+            --gi-anemo: #73f9d3;
+            --gi-rarity-5: #ffb13f;
         }
 
         body {
-            background-color: var(--p5-black);
-            color: var(--p5-white);
-            font-family: 'Arsenal', sans-serif;
-            overflow-x: hidden;
+            background-color: #0c0f16;
+            color: white;
+            font-family: 'Quicksand', sans-serif;
             margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background: radial-gradient(circle at center, #1b2838 0%, #050a10 100%);
         }
 
-        /* Latar belakang pola bintang khas P5 */
-        .bg-pattern {
+        /* Latar Belakang Partikel */
+        .ambient-bg {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, var(--p5-red) 25%, transparent 25%) -50px 0,
-                        linear-gradient(-45deg, var(--p5-red) 25%, transparent 25%) -50px 0,
-                        linear-gradient(45deg, transparent 75%, var(--p5-red) 75%),
-                        linear-gradient(-45deg, transparent 75%, var(--p5-red) 75%);
-            background-size: 100px 100px;
-            opacity: 0.08;
+            inset: 0;
+            background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+            opacity: 0.2;
             z-index: -1;
-            animation: moveBackground 25s linear infinite;
         }
 
-        @keyframes moveBackground {
-            from { background-position: 0 0; }
-            to { background-position: 500px 500px; }
-        }
-
-        /* Gaya teks ransom note */
-        .ransom-text {
-            display: inline-block;
-            font-family: 'Permanent Marker', cursive;
-            transform: rotate(-2deg);
-            padding: 5px 15px;
-            background: var(--p5-white);
-            color: var(--p5-black);
-            box-shadow: 5px 5px 0 var(--p5-red);
-            text-transform: uppercase;
-        }
-
-        .ransom-text:nth-child(even) {
-            transform: rotate(2deg);
-            background: var(--p5-black);
-            color: var(--p5-white);
-            box-shadow: 5px 5px 0 var(--p5-white);
-        }
-
-        /* Menu miring interaktif */
-        .menu-item {
+        .character-screen {
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            min-height: 100vh;
+            padding: 1rem;
+            gap: 1.5rem;
             position: relative;
-            cursor: pointer;
-            transition: transform 0.2s ease, filter 0.2s ease;
-            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
-            background: var(--p5-black);
-            padding: 1.5rem 3rem;
-            margin-bottom: 12px;
-            border: 3px solid var(--p5-white);
-        }
-
-        .menu-item:hover {
-            transform: translateX(25px) scale(1.05) rotate(-1.5deg);
-            background: var(--p5-red);
-            border-color: var(--p5-black);
             z-index: 10;
         }
 
-        .menu-item::after {
-            content: "";
+        /* Avatar & Nama */
+        .avatar-area {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            height: 400px;
+            padding-bottom: 1rem;
+        }
+
+        .character-portrait {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
             height: 100%;
-            background: var(--p5-white);
-            opacity: 0;
-            transition: opacity 0.2s;
-            z-index: -1;
+            z-index: 1;
+            /* Blending karakter tanpa efek glow berlebihan */
+            filter: contrast(1.05) brightness(1.1);
+            mask-image: linear-gradient(to top, transparent 0%, black 15%, black 85%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to top, transparent 0%, black 15%, black 85%, transparent 100%);
         }
 
-        .menu-item:hover::after {
-            opacity: 0.2;
-        }
-
-        /* Kontainer modal section */
-        .section-container {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
+        .character-portrait img {
             height: 100%;
-            background: var(--p5-red);
-            z-index: 100;
-            padding: 5%;
-            overflow-y: auto;
+            width: auto;
+            object-fit: contain;
         }
 
-        .section-container.active {
-            display: block;
-            animation: slideIn 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        .name-card {
+            position: relative;
+            z-index: 10;
+            text-align: center;
         }
 
-        @keyframes slideIn {
-            from { transform: translateX(100%) skewX(-15deg); opacity: 0; }
-            to { transform: translateX(0) skewX(0); opacity: 1; }
+        .vision-container {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border-radius: 50%;
+            border: 2px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px var(--gi-anemo);
+            margin: 0 auto;
         }
 
-        .close-btn {
+        .vision-container img {
+            width: 70%;
+            height: 70%;
+            filter: drop-shadow(0 0 5px var(--gi-anemo));
+        }
+
+        .rarity-stars {
+            color: var(--gi-rarity-5);
+            font-size: 1.25rem;
+            text-shadow: 0 0 10px rgba(255, 177, 63, 0.5);
+            margin-top: 0.5rem;
+        }
+
+        /* Panel UI Utama */
+        .ui-panel {
+            background: var(--gi-blue-panel);
+            border: 1px solid rgba(219, 180, 127, 0.3);
+            border-radius: 4px;
+            padding: 1.5rem;
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.8);
+            width: 100%;
+            margin-bottom: 3rem;
+            min-height: 500px;
+        }
+
+        .corner {
             position: absolute;
-            top: 20px;
-            right: 40px;
-            font-size: 3rem;
-            color: var(--p5-white);
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--gi-gold-accent);
+        }
+        .tl { top: 10px; left: 10px; border-right: 0; border-bottom: 0; }
+        .tr { top: 10px; right: 10px; border-left: 0; border-bottom: 0; }
+        .bl { bottom: 10px; left: 10px; border-right: 0; border-top: 0; }
+        .br { bottom: 10px; right: 10px; border-left: 0; border-top: 0; }
+
+        /* Navigasi Tab */
+        .nav-tabs {
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 0.5rem;
+        }
+
+        .tab-trigger {
+            padding: 8px 12px;
             cursor: pointer;
-            z-index: 110;
-            font-family: 'Permanent Marker', cursive;
-            transition: transform 0.2s;
+            font-weight: bold;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.5);
+            transition: all 0.3s;
+            text-transform: uppercase;
         }
 
-        .close-btn:hover {
-            transform: scale(1.2) rotate(90deg);
+        .tab-trigger.active {
+            color: white;
+            border-bottom: 3px solid var(--gi-anemo);
         }
 
-        /* Grafis tambahan */
-        .p5-jagged {
-            position: fixed;
-            background: var(--p5-white);
-            height: 200vh;
-            width: 100px;
-            top: -50vh;
-            right: 15%;
-            transform: rotate(20deg);
-            opacity: 0.05;
-            z-index: -1;
-            pointer-events: none;
+        /* Konten Tab */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease-out forwards;
         }
 
-        /* Scrollbar kustom */
-        ::-webkit-scrollbar { width: 12px; }
-        ::-webkit-scrollbar-track { background: var(--p5-black); }
-        ::-webkit-scrollbar-thumb { background: var(--p5-red); border: 3px solid var(--p5-white); }
+        .tab-content.active {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Styling Atribut */
+        .item-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-value {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        /* Styling Senjata */
+        .weapon-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .weapon-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #ffb13f, #c3a179);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            border: 2px solid var(--gi-gold-accent);
+            flex-shrink: 0;
+        }
+
+        /* Styling Talenta */
+        .talent-item {
+            display: flex;
+            gap: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid var(--gi-anemo);
+            align-items: center;
+        }
+
+        .talent-icon {
+            width: 45px;
+            height: 45px;
+            background: var(--gi-blue-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            border: 1px solid var(--gi-anemo);
+            flex-shrink: 0;
+            aspect-ratio: 1 / 1;
+        }
+
+        /* --- STYLING KONSTELASI LINGKARAN --- */
+        .constellation-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 50px; /* Membuat kontainer berbentuk kapsul/lingkaran panjang */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 10px;
+        }
+
+        .const-node {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 10px;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .const-node:hover {
+            transform: scale(1.15);
+            border-color: var(--gi-gold-accent);
+        }
+
+        .const-node.unlocked {
+            border-color: var(--gi-anemo);
+            color: var(--gi-anemo);
+            background: rgba(115, 249, 211, 0.1);
+        }
+
+        .const-node.selected {
+            background: var(--gi-anemo);
+            border-color: #fff;
+            color: var(--gi-blue-dark);
+            box-shadow: 0 0 15px var(--gi-anemo);
+        }
+
+        .const-node.pulse {
+            animation: constPulse 2s infinite;
+        }
+
+        @keyframes constPulse {
+            0%, 100% { box-shadow: 0 0 5px var(--gi-anemo); }
+            50% { box-shadow: 0 0 20px var(--gi-anemo); }
+        }
+
+        .const-info-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 10px;
+            min-height: 90px;
+            border-left: 4px solid var(--gi-anemo);
+        }
+
+        /* Desktop Adjustments */
+        @media (min-width: 1024px) {
+            body { overflow: hidden; }
+            .character-screen {
+                display: grid;
+                grid-template-columns: 1.2fr 450px;
+                height: 100vh;
+                padding: 3rem;
+                flex-direction: row;
+            }
+            .avatar-area { height: 95%; align-items: flex-start; padding-bottom: 2rem; }
+            .character-portrait { left: 5%; transform: none; height: 95%; }
+            .name-card { text-align: left; margin-left: 2rem; }
+            .vision-container { margin: 0; width: 70px; height: 70px; }
+            .ui-panel { padding: 2.5rem; max-height: 90vh; overflow-y: auto; margin-bottom: 0; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="bg-pattern"></div>
-    <div class="p5-jagged"></div>
+    <div class="ambient-bg"></div>
 
-    <!-- Navigasi Utama -->
-    <main class="min-h-screen flex flex-col justify-center p-8 md:p-24 relative">
+    <div class="character-screen">
         
-        <header class="mb-16">
-            <h1 class="text-4xl md:text-7xl font-black italic tracking-tighter flex flex-wrap gap-4">
-                <span class="ransom-text">RIDHO</span>
-                <span class="ransom-text">WAHYU</span>
-                <span class="ransom-text" style="background: var(--p5-red); color: white; box-shadow: 6px 6px 0 black;">DARMAWAN</span>
-            </h1>
-            <div class="mt-6">
-                <p class="text-xl md:text-2xl bg-white text-black inline-block px-6 py-2 font-bold skew-x-12 transform">
-                    "STEALING HEARTS THROUGH CODE"
-                </p>
+        <!-- Sisi Kiri: Avatar & Nama -->
+        <div class="avatar-area">
+            <div class="character-portrait slide-up">
+                <img src="https://static.wikia.nocookie.net/p__/images/d/de/Aether_Infobox.png/revision/latest?cb=20210812184529&path-prefix=protagonist" alt="Aether">
             </div>
-        </header>
 
-        <nav class="flex flex-col items-start gap-4">
-            <div class="menu-item w-full md:w-[450px]" onclick="openSection('about')">
-                <span class="text-2xl md:text-3xl font-black italic">01 // PROFIL PERSONA</span>
-            </div>
-            <div class="menu-item w-full md:w-[400px]" onclick="openSection('skills')">
-                <span class="text-2xl md:text-3xl font-black italic">02 // KEAHLIAN</span>
-            </div>
-            <div class="menu-item w-full md:w-[350px]" onclick="openSection('contact')">
-                <span class="text-2xl md:text-3xl font-black italic">03 // HUBUNGI</span>
-            </div>
-        </nav>
-
-        <footer class="mt-auto pt-12">
-            <div class="flex items-center gap-4">
-                <div class="h-[2px] w-20 bg-red-600"></div>
-                <p class="font-bold opacity-60 uppercase tracking-[0.3em] text-sm">A Phantom Thief of Development</p>
-            </div>
-        </footer>
-    </main>
-
-    <!-- Modal Section: About -->
-    <div id="about" class="section-container">
-        <span class="close-btn" onclick="closeSection('about')">KEMBALI</span>
-        <div class="max-w-4xl mx-auto mt-20">
-            <h2 class="text-6xl md:text-8xl font-black mb-12 transform -rotate-2">
-                <span class="bg-black text-white px-4">DATA</span> DIRI
-            </h2>
-            <div class="bg-black text-white p-10 border-8 border-white transform rotate-1 shadow-[25px_25px_0_rgba(0,0,0,0.5)]">
-                <p class="text-2xl md:text-4xl leading-snug font-bold">
-                    Saya adalah <span class="text-red-500 italic">Ridho Wahyu Darmawan</span>. 
-                    Seorang pengembang yang bergerak di bawah bayang-bayang kode. 
-                    Misi saya adalah mereformasi sistem yang membosankan menjadi pengalaman digital yang memukau.
-                </p>
-                <div class="mt-8 border-t-2 border-red-600 pt-4 italic text-xl opacity-80">
-                    "Wake up, get up, get out there."
+            <div class="name-card slide-up">
+                <div class="flex flex-col md:flex-row items-center gap-4 md:gap-6 mb-2">
+                    <div class="vision-container">
+                        <img src="https://www.svgrepo.com/show/504386/genshin-impact.svg" alt="Genshin Star">
+                    </div>
+                    <div>
+                        <h1 class="text-4xl md:text-6xl font-bold tracking-tight gi-title" style="font-family: 'Cinzel', serif;">RIDHO WAHYU</h1>
+                        <div class="rarity-stars">★★★★★</div>
+                    </div>
+                </div>
+                <div class="bg-black/40 backdrop-blur inline-block px-4 py-1 rounded text-xs md:text-sm tracking-widest text-cyan-300">
+                    UID: 2026-RIDHO-WAHYU
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Modal Section: Skills -->
-    <div id="skills" class="section-container" style="background: var(--p5-black);">
-        <span class="close-btn" onclick="closeSection('skills')">TUTUP</span>
-        <div class="max-w-5xl mx-auto mt-20">
-            <h2 class="text-6xl md:text-8xl font-black mb-12 text-white italic text-center">SKILL INVENTORY</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="bg-white text-black p-8 transform rotate-3 border-4 border-red-600">
-                    <h3 class="font-black text-4xl mb-4 underline">FRONTEND</h3>
-                    <p class="text-2xl font-bold">HTML5, CSS3, JavaScript, React.js, Tailwind CSS</p>
+        <!-- Sisi Kanan: Panel UI Konten -->
+        <div class="ui-panel slide-up">
+            <div class="corner tl"></div><div class="corner tr"></div>
+            <div class="corner bl"></div><div class="corner br"></div>
+
+            <nav class="nav-tabs">
+                <div class="tab-trigger active" onclick="switchTab('atribut')">Atribut</div>
+                <div class="tab-trigger" onclick="switchTab('senjata')">Senjata</div>
+                <div class="tab-trigger" onclick="switchTab('talenta')">Talenta</div>
+            </nav>
+
+            <!-- KONTEN: ATRIBUT -->
+            <div id="tab-atribut" class="tab-content active">
+                <div class="flex flex-col gap-1 mb-4">
+                    <div class="flex justify-between items-baseline">
+                        <span class="text-xl md:text-2xl font-bold">Level 90/90</span>
+                        <span class="text-[10px] md:text-xs text-gray-400">Persahabatan Lv. 10</span>
+                    </div>
+                    <div class="w-full h-1 bg-white/10 rounded overflow-hidden mt-2">
+                        <div class="h-full bg-gradient-to-r from-cyan-400 to-emerald-400 w-[95%]"></div>
+                    </div>
                 </div>
-                <div class="bg-red-600 text-white p-8 transform -rotate-2 border-4 border-white">
-                    <h3 class="font-black text-4xl mb-4 underline">BACKEND</h3>
-                    <p class="text-2xl font-bold">Node.js, Express, PostgreSQL, Firebase</p>
+
+                <div class="space-y-1">
+                    <div class="item-row">
+                        <span class="text-sm text-gray-300">❤️ HP Max</span>
+                        <span class="stat-value">24,580</span>
+                    </div>
+                    <div class="item-row">
+                        <span class="text-sm text-gray-300">⚔️ Serangan</span>
+                        <span class="stat-value">2,145</span>
+                    </div>
+                    <div class="item-row">
+                        <span class="text-sm text-gray-300">🛡️ Pertahanan</span>
+                        <span class="stat-value">852</span>
+                    </div>
+                    <div class="item-row">
+                        <span class="text-sm text-gray-300">🌀 Elemental Mastery</span>
+                        <span class="stat-value">420</span>
+                    </div>
                 </div>
-                <div class="bg-white text-black p-8 transform -rotate-1 border-4 border-red-600">
-                    <h3 class="font-black text-4xl mb-4 underline">DESIGN</h3>
-                    <p class="text-2xl font-bold">UI/UX Design, Figma, Adobe Photoshop</p>
+
+                <div class="bg-black/20 p-4 rounded-lg border border-white/5 mt-4">
+                    <p class="text-[10px] md:text-xs text-gray-300 leading-relaxed italic">
+                        "Penyihir baris kode yang lahir dari region Fullstack. Dengan Vision Anemo, ia mampu menyebarkan efisiensi logika ke seluruh sistem."
+                    </p>
                 </div>
-                <div class="bg-red-600 text-white p-8 transform rotate-2 border-4 border-white">
-                    <h3 class="font-black text-4xl mb-4 underline">TOOLS</h3>
-                    <p class="text-2xl font-bold">Git, VS Code, Linux, Docker</p>
+                
+                <div class="mt-4">
+                    <span class="text-[10px] font-bold text-gray-400 tracking-widest uppercase mb-2 block">Konstelasi: Animus Architectura</span>
+                    
+                    <!-- Susunan Lingkaran Konstelasi -->
+                    <div class="constellation-row">
+                        <div class="const-node unlocked selected pulse" onclick="selectConst(1, this)">C1</div>
+                        <div class="const-node unlocked" onclick="selectConst(2, this)">C2</div>
+                        <div class="const-node unlocked" onclick="selectConst(3, this)">C3</div>
+                        <div class="const-node unlocked" onclick="selectConst(4, this)">C4</div>
+                        <div class="const-node unlocked" onclick="selectConst(5, this)">C5</div>
+                        <div class="const-node" onclick="selectConst(6, this)">C6</div>
+                    </div>
+
+                    <!-- Box Info Konstelasi -->
+                    <div id="const-info" class="const-info-box">
+                        <h4 id="const-name" class="text-cyan-400 font-bold text-xs uppercase">C1: Echoing Syntax</h4>
+                        <p id="const-desc" class="text-[10px] text-gray-300 mt-1">Meningkatkan kecepatan mengetik sebesar 15% secara permanen.</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Modal Section: Contact -->
-    <div id="contact" class="section-container">
-        <span class="close-btn" onclick="closeSection('contact')">X</span>
-        <div class="max-w-4xl mx-auto mt-20 text-center">
-            <h2 class="text-7xl md:text-9xl font-black mb-16 transform -skew-x-12 bg-black text-white inline-block px-8">CALLING CARD</h2>
-            <div class="bg-white text-black p-12 inline-block border-[12px] border-black shadow-[30px_30px_0_rgba(211,47,47,1)] text-left transform rotate-1">
-                <p class="text-4xl font-black mb-8 border-b-4 border-red-600 pb-2">SIAP BERKOLABORASI?</p>
-                <div class="space-y-6 text-2xl md:text-3xl font-bold">
-                    <div class="flex items-center gap-4">
-                        <span class="bg-red-600 text-white px-2">EMAIL:</span>
-                        <span>ridho@phantom.dev</span>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <span class="bg-black text-white px-2">GITHUB:</span>
-                        <span>github.com/ridhowahyu</span>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <span class="bg-red-600 text-white px-2">LOKASI:</span>
-                        <span>Metaverse / Indonesia</span>
+            <!-- KONTEN: SENJATA -->
+            <div id="tab-senjata" class="tab-content">
+                <div class="weapon-card">
+                    <div class="weapon-icon">⌨️</div>
+                    <div>
+                        <h3 class="text-lg font-bold">Mechanical Catalyst</h3>
+                        <div class="text-xs text-yellow-500">★★★★★</div>
+                        <div class="text-[10px] text-gray-400">Level 90 | Refinement 5</div>
                     </div>
                 </div>
+                
+                <div class="space-y-2 mt-4">
+                    <div class="item-row">
+                        <span class="text-sm">Base ATK</span>
+                        <span class="stat-value">674</span>
+                    </div>
+                    <div class="item-row">
+                        <span class="text-sm">CRIT DMG</span>
+                        <span class="stat-value">44.1%</span>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <h4 class="text-cyan-400 text-xs font-bold mb-1 italic">Efek Pasif: Echo of Logic</h4>
+                    <p class="text-[10px] text-gray-300 leading-relaxed">
+                        Meningkatkan kecepatan mengetik sebesar 20%. Setiap kali melakukan <span class="text-white">Git Commit</span>, meningkatkan efisiensi debugging sebesar 12% selama 15 detik. Efek dapat ditumpuk hingga 3 lapis.
+                    </p>
+                </div>
+            </div>
+
+            <!-- KONTEN: TALENTA -->
+            <div id="tab-talenta" class="tab-content">
+                <div class="space-y-4">
+                    <div class="talent-item">
+                        <div class="talent-icon">⚔️</div>
+                        <div>
+                            <h4 class="font-bold text-sm">Normal Attack: Code Strike</h4>
+                            <p class="text-[10px] text-gray-400">Melancarkan hingga 5 baris kode beruntun yang memberikan Physical Damage.</p>
+                        </div>
+                    </div>
+                    <div class="talent-item">
+                        <div class="talent-icon">🌀</div>
+                        <div>
+                            <h4 class="font-bold text-sm">Elemental Skill: Bug Slash</h4>
+                            <p class="text-[10px] text-gray-400">Menghapus bug dalam area lingkaran, memberikan Anemo DMG dan memulihkan energi mental.</p>
+                        </div>
+                    </div>
+                    <div class="talent-item">
+                        <div class="talent-icon">✨</div>
+                        <div>
+                            <h4 class="font-bold text-sm">Elemental Burst: Deploy Matrix</h4>
+                            <p class="text-[10px] text-gray-400">Menciptakan domain server yang meningkatkan CRIT Rate seluruh rekan tim sebesar 15%.</p>
+                        </div>
+                    </div>
+                    <div class="talent-item">
+                        <div class="talent-icon">⚙️</div>
+                        <div>
+                            <h4 class="font-bold text-sm">Passive: Clean Architecture</h4>
+                            <p class="text-[10px] text-gray-400">Mengurangi konsumsi stamina saat melakukan refactoring sebesar 20%.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tombol Interaksi -->
+            <div class="mt-auto pt-6 flex gap-3">
+                <button class="flex-1 bg-white text-black font-bold py-3 rounded-sm text-xs tracking-widest hover:bg-gray-200 transition" onclick="window.location.href='mailto:ridho@teyvat.dev'">
+                    HUBUNGI TRAVELER
+                </button>
+                <button class="px-5 border border-white/20 hover:bg-white/10 transition rounded-sm">
+                    ✉️
+                </button>
             </div>
         </div>
     </div>
 
     <script>
-        function openSection(id) {
-            document.getElementById(id).classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
+        const constData = {
+            1: { name: "C1: Echoing Syntax", desc: "Meningkatkan kecepatan mengetik sebesar 15% secara permanen." },
+            2: { name: "C2: Logic Swirl", desc: "Debugging kini memberikan efek pemulihan fokus mental sebesar 20%." },
+            3: { name: "C3: Commit Surge", desc: "Meningkatkan level Elemental Burst sebesar 3. Maksimum level 15." },
+            4: { name: "C4: Algorithm Mastery", desc: "Mengurangi konsumsi RAM sistem sebesar 30% saat menjalankan kode berat." },
+            5: { name: "C5: Fullstack Ascension", desc: "Meningkatkan level Elemental Skill sebesar 3. Maksimum level 15." },
+            6: { name: "C6: The Architect's Vision", desc: "Membuka status 'Immunity to Burnout'. Setiap baris kode yang ditulis meningkatkan CRIT DMG sebesar 2%." }
+        };
 
-        function closeSection(id) {
-            document.getElementById(id).classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-
-        // Efek paralaks halus untuk elemen latar belakang
-        document.addEventListener('mousemove', (e) => {
-            const x = (e.clientX / window.innerWidth - 0.5) * 30;
-            const y = (e.clientY / window.innerHeight - 0.5) * 30;
-            
-            const jagged = document.querySelector('.p5-jagged');
-            jagged.style.transform = `rotate(20deg) translate(${x}px, ${y}px)`;
-            
-            // Sedikit rotasi pada teks ransom saat mouse bergerak
-            const ransom = document.querySelectorAll('.ransom-text');
-            ransom.forEach((text, i) => {
-                const factor = (i % 2 === 0 ? 1 : -1) * 2;
-                text.style.transform = `rotate(${factor + (x/10)}deg)`;
+        function selectConst(id, element) {
+            // Hapus kelas terpilih dari semua titik
+            const nodes = document.querySelectorAll('.const-node');
+            nodes.forEach(n => {
+                n.classList.remove('selected', 'pulse');
             });
-        });
+
+            // Tambahkan kelas ke titik yang dipilih
+            element.classList.add('selected', 'pulse');
+
+            // Update informasi teks
+            document.getElementById('const-name').innerText = constData[id].name;
+            document.getElementById('const-desc').innerText = constData[id].desc;
+        }
+
+        function switchTab(tabName) {
+            const triggers = document.querySelectorAll('.tab-trigger');
+            triggers.forEach(t => {
+                t.classList.remove('active');
+                if (t.innerText.toLowerCase() === tabName) {
+                    t.classList.add('active');
+                }
+            });
+
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(c => {
+                c.classList.remove('active');
+            });
+            document.getElementById('tab-' + tabName).classList.add('active');
+        }
+
+        // Efek Paralaks Mouse
+        const isMobile = window.matchMedia("(max-width: 1024px)").matches;
+        if (!isMobile) {
+            document.addEventListener('mousemove', (e) => {
+                const x = (e.clientX - window.innerWidth / 2) * 0.01;
+                const y = (e.clientY - window.innerHeight / 2) * 0.01;
+                const portrait = document.querySelector('.character-portrait');
+                if(portrait) portrait.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        }
     </script>
 </body>
 </html>
