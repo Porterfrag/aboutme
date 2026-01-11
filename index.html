@@ -1,317 +1,301 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RW_DARMAWAN // TERMINAL</title>
+    <title>Persona 5 Portfolio | Ridho Wahyu Darmawan</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Arsenal:wght@400;700&family=Permanent+Marker&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;700&display=swap');
-
         :root {
-            --term-green: #00ff41;
-            --term-bg: #0a0a0a;
-            --term-glow: rgba(0, 255, 65, 0.2);
+            --p5-red: #d32f2f;
+            --p5-black: #000000;
+            --p5-white: #ffffff;
         }
 
         body {
-            background-color: var(--term-bg);
-            color: var(--term-green);
-            font-family: 'Fira Code', monospace;
+            background-color: var(--p5-black);
+            color: var(--p5-white);
+            font-family: 'Arsenal', sans-serif;
+            overflow-x: hidden;
             margin: 0;
-            overflow: hidden;
-            height: 100vh;
         }
 
-        /* CRT Scanline Effect */
-        body::before {
-            content: " ";
-            display: block;
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 20;
-            background-size: 100% 4px, 3px 100%;
-            pointer-events: none;
-        }
-
-        /* Glitch Effect */
-        .glitch {
-            text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75),
-                         -0.025em -0.05em 0 rgba(0, 255, 0, 0.75),
-                         0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
-            animation: glitch 500ms infinite;
-        }
-
-        @keyframes glitch {
-            0% { text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75), -0.05em -0.025em 0 rgba(0, 255, 0, 0.75), -0.025em 0.05em 0 rgba(0, 0, 255, 0.75); }
-            14% { text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75), -0.05em -0.025em 0 rgba(0, 255, 0, 0.75), -0.025em 0.05em 0 rgba(0, 0, 255, 0.75); }
-            15% { text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75), 0.025em 0.025em 0 rgba(0, 255, 0, 0.75), -0.05em -0.05em 0 rgba(0, 0, 255, 0.75); }
-            49% { text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75), 0.025em 0.025em 0 rgba(0, 255, 0, 0.75), -0.05em -0.05em 0 rgba(0, 0, 255, 0.75); }
-            50% { text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75), 0.05em 0 0 rgba(0, 255, 0, 0.75), 0 -0.05em 0 rgba(0, 0, 255, 0.75); }
-            99% { text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75), 0.05em 0 0 rgba(0, 255, 0, 0.75), 0 -0.05em 0 rgba(0, 0, 255, 0.75); }
-            100% { text-shadow: -0.025em 0 0 rgba(255, 0, 0, 0.75), -0.025em -0.025em 0 rgba(0, 255, 0, 0.75), -0.025em -0.05em 0 rgba(0, 0, 255, 0.75); }
-        }
-
-        .terminal-container {
-            max-width: 900px;
-            margin: 2rem auto;
-            padding: 1.5rem;
-            height: calc(100vh - 4rem);
-            overflow-y: auto;
-            border: 1px solid var(--term-green);
-            box-shadow: 0 0 15px var(--term-glow);
-            scrollbar-width: thin;
-            scrollbar-color: var(--term-green) transparent;
-        }
-
-        .terminal-container::-webkit-scrollbar { width: 6px; }
-        .terminal-container::-webkit-scrollbar-thumb { background: var(--term-green); border-radius: 3px; }
-
-        .cursor {
-            display: inline-block;
-            width: 10px;
-            height: 18px;
-            background-color: var(--term-green);
-            margin-left: 5px;
-            animation: blink 1s step-end infinite;
-            vertical-align: middle;
-        }
-
-        @keyframes blink {
-            from, to { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        .command-input {
-            background: transparent;
-            border: none;
-            color: var(--term-green);
-            font-family: inherit;
-            font-size: inherit;
-            outline: none;
-            width: 80%;
-        }
-
-        .ascii-art {
-            white-space: pre;
-            line-height: 1.2;
-            font-size: 0.7rem;
-            margin-bottom: 20px;
-        }
-
-        @media (min-width: 768px) {
-            .ascii-art { font-size: 0.9rem; }
-        }
-
-        .output-line { margin-bottom: 0.5rem; }
-        .prompt { color: #f0f; font-weight: bold; }
-        .system-msg { color: #aaa; font-style: italic; }
-        .highlight { color: #fff; background: rgba(0, 255, 65, 0.3); padding: 0 2px; }
-        .link { text-decoration: underline; cursor: pointer; }
-        .link:hover { color: #fff; }
-
-        #canvas-bg {
+        /* Latar belakang pola bintang khas P5 */
+        .bg-pattern {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            background: linear-gradient(45deg, var(--p5-red) 25%, transparent 25%) -50px 0,
+                        linear-gradient(-45deg, var(--p5-red) 25%, transparent 25%) -50px 0,
+                        linear-gradient(45deg, transparent 75%, var(--p5-red) 75%),
+                        linear-gradient(-45deg, transparent 75%, var(--p5-red) 75%);
+            background-size: 100px 100px;
+            opacity: 0.08;
             z-index: -1;
-            opacity: 0.15;
+            animation: moveBackground 25s linear infinite;
         }
+
+        @keyframes moveBackground {
+            from { background-position: 0 0; }
+            to { background-position: 500px 500px; }
+        }
+
+        /* Gaya teks ransom note */
+        .ransom-text {
+            display: inline-block;
+            font-family: 'Permanent Marker', cursive;
+            transform: rotate(-2deg);
+            padding: 5px 15px;
+            background: var(--p5-white);
+            color: var(--p5-black);
+            box-shadow: 5px 5px 0 var(--p5-red);
+            text-transform: uppercase;
+        }
+
+        .ransom-text:nth-child(even) {
+            transform: rotate(2deg);
+            background: var(--p5-black);
+            color: var(--p5-white);
+            box-shadow: 5px 5px 0 var(--p5-white);
+        }
+
+        /* Menu miring interaktif */
+        .menu-item {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s ease, filter 0.2s ease;
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
+            background: var(--p5-black);
+            padding: 1.5rem 3rem;
+            margin-bottom: 12px;
+            border: 3px solid var(--p5-white);
+        }
+
+        .menu-item:hover {
+            transform: translateX(25px) scale(1.05) rotate(-1.5deg);
+            background: var(--p5-red);
+            border-color: var(--p5-black);
+            z-index: 10;
+        }
+
+        .menu-item::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--p5-white);
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: -1;
+        }
+
+        .menu-item:hover::after {
+            opacity: 0.2;
+        }
+
+        /* Kontainer modal section */
+        .section-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--p5-red);
+            z-index: 100;
+            padding: 5%;
+            overflow-y: auto;
+        }
+
+        .section-container.active {
+            display: block;
+            animation: slideIn 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%) skewX(-15deg); opacity: 0; }
+            to { transform: translateX(0) skewX(0); opacity: 1; }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            font-size: 3rem;
+            color: var(--p5-white);
+            cursor: pointer;
+            z-index: 110;
+            font-family: 'Permanent Marker', cursive;
+            transition: transform 0.2s;
+        }
+
+        .close-btn:hover {
+            transform: scale(1.2) rotate(90deg);
+        }
+
+        /* Grafis tambahan */
+        .p5-jagged {
+            position: fixed;
+            background: var(--p5-white);
+            height: 200vh;
+            width: 100px;
+            top: -50vh;
+            right: 15%;
+            transform: rotate(20deg);
+            opacity: 0.05;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Scrollbar kustom */
+        ::-webkit-scrollbar { width: 12px; }
+        ::-webkit-scrollbar-track { background: var(--p5-black); }
+        ::-webkit-scrollbar-thumb { background: var(--p5-red); border: 3px solid var(--p5-white); }
     </style>
 </head>
-<body onclick="focusInput()">
-    <canvas id="canvas-bg"></canvas>
+<body>
 
-    <div class="terminal-container" id="terminal-scroll">
-        <div id="terminal-content">
-            <div class="ascii-art">
-██████╗ ██╗██████╗ ██╗  ██╗ ██████╗ 
-██╔══██╗██║██╔══██╗██║  ██║██╔═══██╗
-██████╔╝██║██║  ██║███████║██║   ██║
-██╔══██╗██║██║  ██║██╔══██║██║   ██║
-██║  ██║██║██████╔╝██║  ██║╚██████╔╝
-╚═╝  ╚═╝╚═╝╚═════╝ ╚═╝  ╚═╝ ╚═════╝ 
-RIDHO WAHYU DARMAWAN - V2.5.0
+    <div class="bg-pattern"></div>
+    <div class="p5-jagged"></div>
+
+    <!-- Navigasi Utama -->
+    <main class="min-h-screen flex flex-col justify-center p-8 md:p-24 relative">
+        
+        <header class="mb-16">
+            <h1 class="text-4xl md:text-7xl font-black italic tracking-tighter flex flex-wrap gap-4">
+                <span class="ransom-text">RIDHO</span>
+                <span class="ransom-text">WAHYU</span>
+                <span class="ransom-text" style="background: var(--p5-red); color: white; box-shadow: 6px 6px 0 black;">DARMAWAN</span>
+            </h1>
+            <div class="mt-6">
+                <p class="text-xl md:text-2xl bg-white text-black inline-block px-6 py-2 font-bold skew-x-12 transform">
+                    "STEALING HEARTS THROUGH CODE"
+                </p>
             </div>
+        </header>
 
-            <div class="output-line system-msg">[SYSTEM] Connection established...</div>
-            <div class="output-line system-msg">[SYSTEM] Authentication successful. Welcome, Admin.</div>
-            <div class="output-line">Type <span class="highlight">'help'</span> to see available commands.</div>
-            <br>
+        <nav class="flex flex-col items-start gap-4">
+            <div class="menu-item w-full md:w-[450px]" onclick="openSection('about')">
+                <span class="text-2xl md:text-3xl font-black italic">01 // PROFIL PERSONA</span>
+            </div>
+            <div class="menu-item w-full md:w-[400px]" onclick="openSection('skills')">
+                <span class="text-2xl md:text-3xl font-black italic">02 // KEAHLIAN</span>
+            </div>
+            <div class="menu-item w-full md:w-[350px]" onclick="openSection('contact')">
+                <span class="text-2xl md:text-3xl font-black italic">03 // HUBUNGI</span>
+            </div>
+        </nav>
+
+        <footer class="mt-auto pt-12">
+            <div class="flex items-center gap-4">
+                <div class="h-[2px] w-20 bg-red-600"></div>
+                <p class="font-bold opacity-60 uppercase tracking-[0.3em] text-sm">A Phantom Thief of Development</p>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Modal Section: About -->
+    <div id="about" class="section-container">
+        <span class="close-btn" onclick="closeSection('about')">KEMBALI</span>
+        <div class="max-w-4xl mx-auto mt-20">
+            <h2 class="text-6xl md:text-8xl font-black mb-12 transform -rotate-2">
+                <span class="bg-black text-white px-4">DATA</span> DIRI
+            </h2>
+            <div class="bg-black text-white p-10 border-8 border-white transform rotate-1 shadow-[25px_25px_0_rgba(0,0,0,0.5)]">
+                <p class="text-2xl md:text-4xl leading-snug font-bold">
+                    Saya adalah <span class="text-red-500 italic">Ridho Wahyu Darmawan</span>. 
+                    Seorang pengembang yang bergerak di bawah bayang-bayang kode. 
+                    Misi saya adalah mereformasi sistem yang membosankan menjadi pengalaman digital yang memukau.
+                </p>
+                <div class="mt-8 border-t-2 border-red-600 pt-4 italic text-xl opacity-80">
+                    "Wake up, get up, get out there."
+                </div>
+            </div>
         </div>
+    </div>
 
-        <div class="flex items-center">
-            <span class="prompt mr-2">guest@rwdarmawan:~$</span>
-            <input type="text" id="command-input" class="command-input" autofocus autocomplete="off" spellcheck="false">
+    <!-- Modal Section: Skills -->
+    <div id="skills" class="section-container" style="background: var(--p5-black);">
+        <span class="close-btn" onclick="closeSection('skills')">TUTUP</span>
+        <div class="max-w-5xl mx-auto mt-20">
+            <h2 class="text-6xl md:text-8xl font-black mb-12 text-white italic text-center">SKILL INVENTORY</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white text-black p-8 transform rotate-3 border-4 border-red-600">
+                    <h3 class="font-black text-4xl mb-4 underline">FRONTEND</h3>
+                    <p class="text-2xl font-bold">HTML5, CSS3, JavaScript, React.js, Tailwind CSS</p>
+                </div>
+                <div class="bg-red-600 text-white p-8 transform -rotate-2 border-4 border-white">
+                    <h3 class="font-black text-4xl mb-4 underline">BACKEND</h3>
+                    <p class="text-2xl font-bold">Node.js, Express, PostgreSQL, Firebase</p>
+                </div>
+                <div class="bg-white text-black p-8 transform -rotate-1 border-4 border-red-600">
+                    <h3 class="font-black text-4xl mb-4 underline">DESIGN</h3>
+                    <p class="text-2xl font-bold">UI/UX Design, Figma, Adobe Photoshop</p>
+                </div>
+                <div class="bg-red-600 text-white p-8 transform rotate-2 border-4 border-white">
+                    <h3 class="font-black text-4xl mb-4 underline">TOOLS</h3>
+                    <p class="text-2xl font-bold">Git, VS Code, Linux, Docker</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Section: Contact -->
+    <div id="contact" class="section-container">
+        <span class="close-btn" onclick="closeSection('contact')">X</span>
+        <div class="max-w-4xl mx-auto mt-20 text-center">
+            <h2 class="text-7xl md:text-9xl font-black mb-16 transform -skew-x-12 bg-black text-white inline-block px-8">CALLING CARD</h2>
+            <div class="bg-white text-black p-12 inline-block border-[12px] border-black shadow-[30px_30px_0_rgba(211,47,47,1)] text-left transform rotate-1">
+                <p class="text-4xl font-black mb-8 border-b-4 border-red-600 pb-2">SIAP BERKOLABORASI?</p>
+                <div class="space-y-6 text-2xl md:text-3xl font-bold">
+                    <div class="flex items-center gap-4">
+                        <span class="bg-red-600 text-white px-2">EMAIL:</span>
+                        <span>ridho@phantom.dev</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="bg-black text-white px-2">GITHUB:</span>
+                        <span>github.com/ridhowahyu</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="bg-red-600 text-white px-2">LOKASI:</span>
+                        <span>Metaverse / Indonesia</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        const input = document.getElementById('command-input');
-        const content = document.getElementById('terminal-content');
-        const scrollContainer = document.getElementById('terminal-scroll');
-
-        const DATA = {
-            whoami: `
-                <div class="mt-2">
-                    <span class="highlight">NAME:</span> Ridho Wahyu Darmawan<br>
-                    <span class="highlight">ROLE:</span> Full Stack Developer & Artificial Intelegent Enthusiast<br>
-                    <span class="highlight">STATUS:</span> Horny.<br>
-                    <span class="highlight">BIO:</span> Specialized in high-performance web applications and AI. 
-                    Loves breaking things to understand how to fix them better.
-                </div>
-            `,
-            skills: `
-                <div class="mt-2">
-                    <span class="highlight">LANGUAGES:</span> JavaScript, TypeScript, Python, HTMX, Hugo<br>
-                    <span class="highlight">FRONTEND:</span> React.js, Tailwind, Next.js, WebGL<br>
-                    <span class="highlight">BACKEND:</span> Node.js, FastAPI, MySQL, Redis<br>
-                    <span class="highlight">TOOLS:</span> Docker, Git, Linux (Kali/Arch), Burp Suite
-                </div>
-            `,
-            projects: `
-                <div class="mt-2">
-                    <span class="highlight">1. SIPKL SMKTAB</span> - Sistem Informasi Praktik Kerja Lapangan SMK Negeri 1 Sungai Tabuk<br>
-                    <span class="highlight">2. SInventar SMKTAB</span> - Sistem Inventaris SMK Negeri 1 Sungai Tabuk<br>
-                    <span class="highlight">3. P3CS</span> - Single Page Website About Me and My Friend<br>
-                    <span class="highlight">4. Rempah Point</span> - Sistem Penjualan Rempah Point<br>
-                    <br>
-                    Type 'view [1-4]' to see details (Under development).
-                </div>
-            `,
-            contact: `
-                <div class="mt-2">
-                    <span class="highlight">EMAIL:</span> ridhozedd@gmail.com<br>
-                    <span class="highlight">GITHUB:</span> github.com/porterfrag<br>
-                    <span class="highlight">LINKEDIN:</span> linkedin.com/in/rwdarmawan<br>
-                    <span class="highlight">LOCATION:</span> Indonesia [GMT+7]
-                </div>
-            `,
-            help: `
-                <div class="mt-2">
-                    <span class="highlight">whoami</span>   - Display personal profile info<br>
-                    <span class="highlight">skills</span>   - List technical capabilities<br>
-                    <span class="highlight">projects</span> - View portfolio of work<br>
-                    <span class="highlight">contact</span>  - Get communication links<br>
-                    <span class="highlight">clear</span>    - Clear terminal screen<br>
-                    <span class="highlight">ls</span>       - List virtual directory<br>
-                    <span class="highlight">matrix</span>   - Toggle matrix effect background
-                </div>
-            `
-        };
-
-        input.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                const cmd = input.value.trim().toLowerCase();
-                processCommand(cmd);
-                input.value = '';
-            }
-        });
-
-        function focusInput() {
-            input.focus();
+        function openSection(id) {
+            document.getElementById(id).classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
 
-        function processCommand(cmd) {
-            // Log the input
-            const historyLine = document.createElement('div');
-            historyLine.className = 'output-line';
-            historyLine.innerHTML = `<span class="prompt">guest@rwdarmawan:~$</span> ${cmd}`;
-            content.appendChild(historyLine);
-
-            const output = document.createElement('div');
-            output.className = 'output-line mb-4';
-
-            if (cmd === 'clear') {
-                content.innerHTML = '';
-            } else if (cmd === 'ls') {
-                output.innerHTML = 'README.md  profile.txt  skills.sys  projects/  bin/';
-            } else if (cmd === 'matrix') {
-                toggleMatrix();
-                output.innerHTML = 'Matrix simulation toggled.';
-            } else if (DATA[cmd]) {
-                output.innerHTML = DATA[cmd];
-            } else if (cmd === '') {
-                // Do nothing
-            } else {
-                output.innerHTML = `Command not found: ${cmd}. Type 'help' for available commands.`;
-            }
-
-            content.appendChild(output);
-            scrollContainer.scrollTop = scrollContainer.scrollHeight;
+        function closeSection(id) {
+            document.getElementById(id).classList.remove('active');
+            document.body.style.overflow = 'auto';
         }
 
-        // Matrix Background Logic
-        const canvas = document.getElementById('canvas-bg');
-        const ctx = canvas.getContext('2d');
-        let width, height, columns, drops;
-        let showMatrix = true;
-
-        function initMatrix() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-            columns = Math.floor(width / 20);
-            drops = new Array(columns).fill(1);
-        }
-
-        function drawMatrix() {
-            if (!showMatrix) return;
-            ctx.fillStyle = 'rgba(10, 10, 10, 0.05)';
-            ctx.fillRect(0, 0, width, height);
+        // Efek paralaks halus untuk elemen latar belakang
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 30;
+            const y = (e.clientY / window.innerHeight - 0.5) * 30;
             
-            ctx.fillStyle = '#00ff41';
-            ctx.font = '15px monospace';
-
-            for (let i = 0; i < drops.length; i++) {
-                const text = String.fromCharCode(Math.floor(Math.random() * 128));
-                ctx.fillText(text, i * 20, drops[i] * 20);
-
-                if (drops[i] * 20 > height && Math.random() > 0.975) {
-                    drops[i] = 0;
-                }
-                drops[i]++;
-            }
-        }
-
-        function toggleMatrix() {
-            showMatrix = !showMatrix;
-            if (!showMatrix) {
-                ctx.clearRect(0, 0, width, height);
-            }
-        }
-
-        window.addEventListener('resize', initMatrix);
-        initMatrix();
-        setInterval(drawMatrix, 50);
-
-        // Initial landing text effect
-        const welcomeText = "Hacking into server... ACCESS GRANTED.";
-        let i = 0;
-        const systemMsg = document.createElement('div');
-        systemMsg.className = 'output-line system-msg';
-        content.appendChild(systemMsg);
-
-        function typeWriter() {
-            if (i < welcomeText.length) {
-                systemMsg.innerHTML += welcomeText.charAt(i);
-                i++;
-                setTimeout(typeWriter, 50);
-            }
-        }
-        
-        window.onload = () => {
-            typeWriter();
-            focusInput();
-        };
-
+            const jagged = document.querySelector('.p5-jagged');
+            jagged.style.transform = `rotate(20deg) translate(${x}px, ${y}px)`;
+            
+            // Sedikit rotasi pada teks ransom saat mouse bergerak
+            const ransom = document.querySelectorAll('.ransom-text');
+            ransom.forEach((text, i) => {
+                const factor = (i % 2 === 0 ? 1 : -1) * 2;
+                text.style.transform = `rotate(${factor + (x/10)}deg)`;
+            });
+        });
     </script>
 </body>
-
 </html>
-
